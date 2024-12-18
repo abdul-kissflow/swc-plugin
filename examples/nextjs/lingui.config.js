@@ -1,5 +1,6 @@
 // use nextjs config as single source of truth for defining locales
-const nextConfig = require('./next.config');
+const nextConfig = require("./next.config");
+const { formatter } = require("@lingui/format-json");
 
 /** @type {import('@lingui/conf').LinguiConfig} */
 module.exports = {
@@ -12,5 +13,7 @@ module.exports = {
       exclude: ["**/node_modules/**"],
     },
   ],
-  format: "po",
-}
+  format: formatter({
+    style: "minimal",
+  }),
+};

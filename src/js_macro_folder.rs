@@ -24,6 +24,18 @@ impl<'a> JsMacroFolder<'a> {
         }
     }
 
+    fn create_message_descriptor_from_tokens_updated(&mut self, tokens: Vec<MsgToken>) -> Expr {
+      let parsed = MessageBuilder::parse(tokens, false);
+
+      let msg_lit=Expr::Lit(Lit::Str(Str {
+        span: DUMMY_SP,
+        value: parsed.message_str.clone().into(),
+        raw: None,
+      }));
+      
+      return msg_lit;
+    }
+
     fn create_message_descriptor_from_tokens(&mut self, tokens: Vec<MsgToken>) -> Expr {
       let parsed = MessageBuilder::parse(tokens, false);
 
@@ -31,7 +43,7 @@ impl<'a> JsMacroFolder<'a> {
         create_key_value_prop("id", generate_message_id(&parsed.message_str, "").into()),
 
       ];
-
+      
       if !self.ctx.options.strip_non_essential_fields {
         props.push(
           create_key_value_prop("message", parsed.message),
@@ -157,7 +169,7 @@ impl<'a> Fold for JsMacroFolder<'a> {
           if let Expr::Ident(ident) = tagged_tpl.tag.as_ref() {
             if self.ctx.is_define_message_ident(&ident) {
               let tokens = self.ctx.tokenize_tpl(&tagged_tpl.tpl);
-              return self.create_message_descriptor_from_tokens(tokens);
+              return self.create_message_descriptor_from_tokens_updated(tokens);
             }
           }
         }

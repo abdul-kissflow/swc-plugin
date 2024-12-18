@@ -8,7 +8,7 @@ export const locales = [
 ];
 
 export async function loadCatalog(locale: string) {
-  const { messages } = await import(`@lingui/loader!../locales/${locale}/messages.po`);
+  const { messages } = await import(`@lingui/loader!../locales/${locale}/messages.json`);
   return messages;
 }
 

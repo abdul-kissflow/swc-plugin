@@ -1,13 +1,16 @@
 {
-  "name": "@lingui/swc-plugin",
-  "version": "4.1.0",
-  "description": "A SWC Plugin for LinguiJS",
+  "name": "lingui-swc-plugin",
+  "version": "1.0.2",
+  "description": "A Kissflow SWC Plugin for LinguiJS",
   "author": {
-    "name": "Timofei Iatsenko",
-    "email": "timiatsenko@gmail.com"
+    "name": "Abdul",
+    "email": "abdul@kissflow.com"
   },
-  "repository": "lingui/swc-plugin",
-  "bugs": "https://github.com/lingui/swc-plugin/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/satheesh66/swc-plugin.git"
+  },
+  "bugs": "https://github.com/satheesh66/swc-plugin/issues",
   "license": "MIT",
   "keywords": [
     "swc-plugin",
