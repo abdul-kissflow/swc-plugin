@@ -169,6 +169,9 @@ impl<'a> Fold for JsMacroFolder<'a> {
           if let Expr::Ident(ident) = tagged_tpl.tag.as_ref() {
             if self.ctx.is_define_message_ident(&ident) {
               let tokens = self.ctx.tokenize_tpl(&tagged_tpl.tpl);
+              if self.ctx.options.load_original {
+                return self.create_message_descriptor_from_tokens(tokens);
+              }
               return self.create_message_descriptor_from_tokens_updated(tokens);
             }
           }

@@ -3,6 +3,7 @@ use serde::Deserialize;
 #[derive(Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct LinguiJsOptions {
+    load_original: Option<bool>,
     runtime_modules: Option<RuntimeModulesConfigMap>,
 }
 
@@ -29,6 +30,7 @@ pub struct RuntimeModulesConfigMapNormalized {
 impl LinguiJsOptions {
     pub fn to_options(self, env_name: &str) -> LinguiOptions {
         LinguiOptions {
+            load_original: self.load_original.is_some(),
             strip_non_essential_fields: matches!(env_name, "production"),
             runtime_modules: RuntimeModulesConfigMapNormalized {
                 i18n: (
@@ -58,6 +60,7 @@ impl LinguiJsOptions {
 
 #[derive(Debug)]
 pub struct LinguiOptions {
+    pub load_original: bool,
     pub strip_non_essential_fields: bool,
     pub runtime_modules: RuntimeModulesConfigMapNormalized,
 }
@@ -65,6 +68,7 @@ pub struct LinguiOptions {
 impl Default for LinguiOptions {
     fn default() -> LinguiOptions {
         LinguiOptions {
+            load_original: false,
             strip_non_essential_fields: false,
             runtime_modules: RuntimeModulesConfigMapNormalized {
                 i18n: ("@lingui/core".into(), "i18n".into()),
@@ -82,6 +86,7 @@ mod lib_tests {
     fn test_config() {
         let config = serde_json::from_str::<LinguiJsOptions>(
             r#"{
+                "loadOriginal": "true",
                 "runtimeModules": {
                     "i18n": ["@lingui/core", "i18n"],
                     "trans": ["@lingui/react", "Trans"]
@@ -91,6 +96,7 @@ mod lib_tests {
             .expect("invalid config for lingui-plugin");
 
         assert_eq!(config, LinguiJsOptions {
+            load_original: Some(true),
             runtime_modules: Some(RuntimeModulesConfigMap {
                 i18n: Some(RuntimeModulesConfig("@lingui/core".into(), Some("i18n".into()))),
                 trans: Some(RuntimeModulesConfig("@lingui/react".into(), Some("Trans".into()))),
@@ -102,6 +108,7 @@ mod lib_tests {
     fn test_config_optional() {
         let config = serde_json::from_str::<LinguiJsOptions>(
             r#"{
+                "loadOriginal": "true",
                 "runtimeModules": {
                     "i18n": ["@lingui/core"]
                 }
@@ -110,6 +117,7 @@ mod lib_tests {
             .expect("invalid config for lingui-plugin");
 
         assert_eq!(config, LinguiJsOptions {
+            load_original: Some(true),
             runtime_modules: Some(RuntimeModulesConfigMap {
                 i18n: Some(RuntimeModulesConfig("@lingui/core".into(), None)),
                 trans: None,
