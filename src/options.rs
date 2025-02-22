@@ -30,7 +30,7 @@ pub struct RuntimeModulesConfigMapNormalized {
 impl LinguiJsOptions {
     pub fn to_options(self, env_name: &str) -> LinguiOptions {
         LinguiOptions {
-            load_original: self.load_original.is_some(),
+            load_original: self.load_original.unwrap(),
             strip_non_essential_fields: matches!(env_name, "production"),
             runtime_modules: RuntimeModulesConfigMapNormalized {
                 i18n: (
@@ -86,7 +86,7 @@ mod lib_tests {
     fn test_config() {
         let config = serde_json::from_str::<LinguiJsOptions>(
             r#"{
-                "loadOriginal": "true",
+                "loadOriginal": true,
                 "runtimeModules": {
                     "i18n": ["@lingui/core", "i18n"],
                     "trans": ["@lingui/react", "Trans"]
@@ -108,7 +108,7 @@ mod lib_tests {
     fn test_config_optional() {
         let config = serde_json::from_str::<LinguiJsOptions>(
             r#"{
-                "loadOriginal": "true",
+                "loadOriginal": false,
                 "runtimeModules": {
                     "i18n": ["@lingui/core"]
                 }
@@ -117,7 +117,7 @@ mod lib_tests {
             .expect("invalid config for lingui-plugin");
 
         assert_eq!(config, LinguiJsOptions {
-            load_original: Some(true),
+            load_original: Some(false),
             runtime_modules: Some(RuntimeModulesConfigMap {
                 i18n: Some(RuntimeModulesConfig("@lingui/core".into(), None)),
                 trans: None,
